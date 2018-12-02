@@ -1,5 +1,6 @@
 const Koa = require('koa')
 const Router = require('koa-router')
+const bodyParser = require('koa-bodyparser')
 
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
@@ -12,6 +13,8 @@ db.defaults({ temp: 0, co2: 0 }).write()
 const app = new Koa()
 const router = new Router()
 
+app.use(bodyParser)
+
 router.get('/', (ctx, next) => {
   ctx.body = 'Hello from Air Quality Manager'
 })
@@ -21,6 +24,14 @@ router.get('/latest', (ctx, next) => {
 })
 
 router.get('/bot', (ctx, next) => {
+  const { temp, co2 } = db.getState()
+  ctx.body = `Current CO2 level is ${co2}ppm and temperature is ${temp}℃.`
+})
+
+router.post('/bot', (ctx, next) => {
+  if (ctx.request.challenge) {
+    return (ctx.body = ctx.request.challenge)
+  }
   const { temp, co2 } = db.getState()
   ctx.body = `Current CO2 level is ${co2}ppm and temperature is ${temp}℃.`
 })
