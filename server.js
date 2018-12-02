@@ -19,11 +19,11 @@ router.get('/', (ctx, next) => {
   ctx.body = 'Hello from Air Quality Manager'
 })
 
-router.get('/latest', (ctx, next) => {
+router.get('/air/latest', (ctx, next) => {
   ctx.body = JSON.stringify(db.getState())
 })
 
-router.post('/bot', (ctx, next) => {
+router.post('/air/bot', (ctx, next) => {
   const { body: { challenge } } = ctx.request
   if (challenge) {
     ctx.set('Content-type', 'application/json')
@@ -33,12 +33,12 @@ router.post('/bot', (ctx, next) => {
   ctx.body = `Current CO2 level is ${co2}ppm and temperature is ${temp}℃.`
 })
 
-router.get('/post/temp/:temp', ctx => {
+router.get('/air/post/temp/:temp', ctx => {
   db.set('temp', ctx.params.temp).write()
   ctx.body = 'done'
 })
 
-router.get('/post/co2/:co2', ctx => {
+router.get('/air/post/co2/:co2', ctx => {
   db.set('co2', ctx.params.co2).write()
   ctx.body = 'done'
 })
