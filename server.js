@@ -13,7 +13,7 @@ db.defaults({ temp: 0, co2: 0 }).write()
 const app = new Koa()
 const router = new Router()
 
-app.use(bodyParser)
+app.use(bodyParser())
 
 router.get('/', (ctx, next) => {
   ctx.body = 'Hello from Air Quality Manager'
