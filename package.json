@@ -9,6 +9,7 @@
   "dependencies": {
     "@verkstedt/eslint-config-verkstedt": "latest",
     "koa": "latest",
+    "koa-bodyparser": "4.2.1",
     "koa-router": "7.4.0",
     "lowdb": "latest"
   },
