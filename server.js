@@ -1,3 +1,6 @@
+const { BOT_ACCESS_TOKEN } = process.env
+const axios = require('axios')
+
 const Koa = require('koa')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
@@ -25,12 +28,31 @@ router.get('/air/latest', (ctx, next) => {
 
 router.post('/air/bot', (ctx, next) => {
   const { body: { challenge } } = ctx.request
+
   if (challenge) {
     ctx.set('Content-type', 'application/json')
     return (ctx.body = JSON.stringify({ challenge }))
   }
-  const { temp, co2 } = db.getState()
-  ctx.body = `Current CO2 level is ${co2}ppm and temperature is ${temp}℃.`
+
+  const { body: { event } } = ctx.request
+  if (event) {
+    const { temp, co2 } = db.getState()
+    const { type, channel, user} = event
+    if (type === 'app_mention') {
+      axios({
+        method: 'POST',
+        url: 'https://slack.com/api/chat.postMessage',
+        data: {
+          text: `Hello <@${user}>! Current CO2 level is ${co2}ppm and temperature is ${temp}C. Rejoice!`,
+          channel
+        },
+        headers: {
+          Authorization: `Bearer ${BOT_ACCESS_TOKEN}`
+        }
+      })
+    }
+  }
+  ctx.status = 200
 })
 
 router.get('/air/post/temp/:temp', ctx => {

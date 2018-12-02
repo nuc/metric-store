@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@verkstedt/eslint-config-verkstedt": "latest",
+    "axios": "^0.18.0",
     "koa": "latest",
     "koa-bodyparser": "4.2.1",
     "koa-router": "7.4.0",
