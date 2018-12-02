@@ -23,14 +23,11 @@ router.get('/latest', (ctx, next) => {
   ctx.body = JSON.stringify(db.getState())
 })
 
-router.get('/bot', (ctx, next) => {
-  const { temp, co2 } = db.getState()
-  ctx.body = `Current CO2 level is ${co2}ppm and temperature is ${temp}℃.`
-})
-
 router.post('/bot', (ctx, next) => {
-  if (ctx.request.challenge) {
-    return (ctx.body = ctx.request.challenge)
+  const { body: { challenge } } = ctx.request
+  if (challenge) {
+    ctx.set('Content-type', 'application/json')
+    return (ctx.body = JSON.stringify({ challenge }))
   }
   const { temp, co2 } = db.getState()
   ctx.body = `Current CO2 level is ${co2}ppm and temperature is ${temp}℃.`
